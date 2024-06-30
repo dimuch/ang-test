@@ -1,0 +1,18 @@
+<form class="form" [formGroup]="profileForm">
+  <div class="input-container">
+    <input
+      class="password"
+      type="password"
+      formControlName="password"
+      name="password"
+      required
+    />
+    <div class="alert alert-danger">
+      <div class="strength-container">
+        @for (item of strength; track item.id) {
+          <div class="strength-item" [ngStyle]="{'background-color': item.color}"></div>
+        }
+      </div>
+    </div>
+  </div>
+</form>
