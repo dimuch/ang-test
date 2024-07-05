@@ -1,19 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {
   FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
-  Validators,
 } from '@angular/forms';
 import {CommonModule} from "@angular/common";
 
 import {PasswordInputComponent} from "../passwordInput/passwordInput.component";
-import {patternValidator} from "../../forms/validators/password.indicator.validator";
 
 @Component({
   selector: 'my-form',
   templateUrl: 'my-form.component.html',
+  styleUrl: './my-from.component.css',
   standalone: true,
   imports: [
     FormsModule,
@@ -23,15 +22,8 @@ import {patternValidator} from "../../forms/validators/password.indicator.valida
     CommonModule,
   ],
 })
-export class MyFormComponent implements OnInit {
-  ngOnInit(): void {
-    console.log(this.formGroup);
-  }
+export class MyFormComponent {
   public formGroup = new FormGroup({
-    password: new FormControl('', Validators.compose([
-      Validators.required,
-      Validators.minLength(8),
-      patternValidator(),
-    ])),
+    password: new FormControl(''),
   });
 }

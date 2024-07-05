@@ -58,15 +58,16 @@ export class PasswordInputComponent implements ControlValueAccessor, Validator {
   onInput(event: Event): void {
     const target = event.target as HTMLInputElement;
     this.password = target.value;
-    debugger
     this.onChange(this.password);
     this.onTouched();
   }
 
   validate(control: FormControl): ValidationErrors | null {
-    this.strength = getStrengthLevel(control);
-    return null;
-  }
+    const {
+      isValid, strength
+    } = getStrengthLevel(control);
 
-  protected readonly JSON = JSON;
+    this.strength = strength;
+    return isValid;
+  }
 }

@@ -1,37 +1,62 @@
-import {FormControl} from "@angular/forms";
+import {FormControl, ValidationErrors, Validators} from "@angular/forms";
 import {
   STRENGTH_COLORS,
   STRENGTH_INDICATOR_DEFAULT,
   StrengthItem,
   VALIDATION_ERRORS_MAP,
 } from "../../constants/app.constants";
+import {patternValidator} from "../../forms/validators/password.indicator.validator";
 
-const getStrengthLevel = (passwordControl: FormControl): StrengthItem[] => {
-  const {errors} = passwordControl;
-  let strength: StrengthItem[] = STRENGTH_INDICATOR_DEFAULT;
+type ValidationResult = {
+  isValid: ValidationErrors | null,
+  strength: StrengthItem[],
+}
 
-  if (errors) {
-    const errorKeys = Object.keys(errors);
-    const firstValidationError = errorKeys[0];
+const getStrength = (strengthLevel: number) => {
+  return STRENGTH_INDICATOR_DEFAULT
+    .map((item: StrengthItem, index: number) => {
+      if (index <= strengthLevel) {
+        return {
+          ...item,
+          color: STRENGTH_COLORS[strengthLevel],
+        }
+      }
+      return item;
+    });
+}
 
-    // @ts-ignore
-    strength = VALIDATION_ERRORS_MAP[firstValidationError];
+const getStrengthLevel = (passwordControl: FormControl): ValidationResult => {
+  let result: ValidationResult = {
+    isValid: null,
+    strength: STRENGTH_INDICATOR_DEFAULT,
+  }
 
-    if (firstValidationError === 'level') {
-      const strengthLevel = errors[firstValidationError];
-      strength = STRENGTH_INDICATOR_DEFAULT
-        .map((item: StrengthItem, index: number) => {
-          if (index <= strengthLevel) {
-            return {
-              ...item,
-              color: STRENGTH_COLORS[strengthLevel],
-            }
-          }
-          return item;
-        });
+  const isRequired = Validators.required(passwordControl);
+  if(isRequired) {
+    return {
+      isValid: isRequired,
+      strength: VALIDATION_ERRORS_MAP['required'],
     }
   }
-  return strength;
+  const isMinLength = Validators.minLength(8)(passwordControl);
+  if(isMinLength) {
+    return {
+      isValid: isMinLength,
+      strength: VALIDATION_ERRORS_MAP['minlength'],
+    }
+  }
+  const isPattern = patternValidator()(passwordControl);
+  if(isPattern){
+    const strengthLevel = isPattern['level'];
+    const strength = getStrength(strengthLevel);
+
+    return {
+      isValid: isPattern,
+      strength: strength,
+    }
+  }
+
+  return result;
 }
 
 export {
