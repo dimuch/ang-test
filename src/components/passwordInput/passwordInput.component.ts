@@ -3,10 +3,14 @@ import {
   Component,
 } from '@angular/core';
 import {
+  NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
+  FormControl,
   ControlValueAccessor,
   FormsModule,
-  ReactiveFormsModule, NG_VALIDATORS, ValidationErrors, FormControl, Validator,
+  ReactiveFormsModule,
+  Validator,
+  ValidationErrors,
 } from '@angular/forms';
 
 import {CommonModule} from "@angular/common";
