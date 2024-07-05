@@ -8,9 +8,9 @@ enum StrengthLevel {
 
 const STRINGS = /[a-zA-Z]+/i;
 const NUMBERS = /[0-9]+/i;
-const OTHER_SYMBOLS = /\W|_/i; ///^[^a-zA-Z0-9]+$/i;
+const OTHER_SYMBOLS = /\W|_/i;
 
-export function patternValidator(): ValidatorFn {
+const patternValidator = (): ValidatorFn => {
   return (control: AbstractControl): ValidationErrors | null => {
     const isString = STRINGS.test(control.value);
     const isNumbers = NUMBERS.test(control.value);
@@ -29,4 +29,8 @@ export function patternValidator(): ValidatorFn {
 
     return {level: StrengthLevel.easy};
   }
+}
+
+export {
+  patternValidator
 }
